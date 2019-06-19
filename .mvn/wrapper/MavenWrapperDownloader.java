@@ -61,7 +61,11 @@ public class MavenWrapperDownloader {
         // wrapperUrl parameter.
         File mavenWrapperPropertyFile = new File(baseDirectory, MAVEN_WRAPPER_PROPERTIES_PATH);
         String url = DEFAULT_DOWNLOAD_URL;
+<<<<<<< HEAD
         if(mavenWrapperPropertyFile.exists()) {
+=======
+        if (mavenWrapperPropertyFile.exists()) {
+>>>>>>> 第一次提交：测试1
             FileInputStream mavenWrapperPropertyFileInputStream = null;
             try {
                 mavenWrapperPropertyFileInputStream = new FileInputStream(mavenWrapperPropertyFile);
@@ -72,7 +76,11 @@ public class MavenWrapperDownloader {
                 System.out.println("- ERROR loading '" + MAVEN_WRAPPER_PROPERTIES_PATH + "'");
             } finally {
                 try {
+<<<<<<< HEAD
                     if(mavenWrapperPropertyFileInputStream != null) {
+=======
+                    if (mavenWrapperPropertyFileInputStream != null) {
+>>>>>>> 第一次提交：测试1
                         mavenWrapperPropertyFileInputStream.close();
                     }
                 } catch (IOException e) {
@@ -83,8 +91,13 @@ public class MavenWrapperDownloader {
         System.out.println("- Downloading from: : " + url);
 
         File outputFile = new File(baseDirectory.getAbsolutePath(), MAVEN_WRAPPER_JAR_PATH);
+<<<<<<< HEAD
         if(!outputFile.getParentFile().exists()) {
             if(!outputFile.getParentFile().mkdirs()) {
+=======
+        if (!outputFile.getParentFile().exists()) {
+            if (!outputFile.getParentFile().mkdirs()) {
+>>>>>>> 第一次提交：测试1
                 System.out.println(
                         "- ERROR creating output direcrory '" + outputFile.getParentFile().getAbsolutePath() + "'");
             }
