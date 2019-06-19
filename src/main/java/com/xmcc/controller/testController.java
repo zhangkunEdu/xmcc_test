@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class testController {
 
-
    //Logger logger = LoggerFactory.getLogger(testController.class);
-
    @RequestMapping("/hello")
    @GetMapping
    @PostMapping
