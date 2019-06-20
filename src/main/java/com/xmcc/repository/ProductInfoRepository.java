@@ -9,7 +9,7 @@ public interface  ProductInfoRepository extends JpaRepository<ProductInfo,String
 
 
      //根据商品的分类目的编号（type）和 状态 （status）查询商品集合
-    List<ProductInfo> findProductInfoByProductStatusAndCategoryTypeIn(Integer status,List<Integer>categoryTypeList);
+    List<ProductInfo> findByProductStatusAndCategoryTypeIn(Integer status,List<Integer>categoryTypeList);
 
 
 }

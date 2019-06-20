@@ -1,17 +1,14 @@
 package com.xmcc.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xmcc.entity.ProductCategory;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Data
 public class ProductCategoryDto implements Serializable {
     //JsonProperty封装成json返回的时候使用 “name”

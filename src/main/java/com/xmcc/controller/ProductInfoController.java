@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("//buyer/product")
+@RequestMapping("buyer/product")
 //如果想通过Swagger生成接口,需要使用Api
 @Api(description = "商品信息接口")
 public class ProductInfoController {

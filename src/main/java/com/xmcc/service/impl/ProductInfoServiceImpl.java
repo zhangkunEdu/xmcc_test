@@ -47,7 +47,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
         //根据 商品分类编号集合 -> 查询商品列表
         List<ProductInfo> productInfoList =
-                infoRepository.findProductInfoByProductStatusAndCategoryTypeIn(ResultEnums.PRODUCT_UP.getCode(), categoryTypeList);
+                infoRepository.findByProductStatusAndCategoryTypeIn(ResultEnums.PRODUCT_UP.getCode(), categoryTypeList);
 
         //对所有分类ProductCategoryDtoList  进行遍历，取出每个商品的类目编号，设置到对应的目录中
 

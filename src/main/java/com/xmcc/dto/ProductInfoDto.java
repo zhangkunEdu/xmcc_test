@@ -1,10 +1,10 @@
 package com.xmcc.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xmcc.entity.ProductInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -16,11 +16,13 @@ import java.math.BigDecimal;
 @Data
 public class ProductInfoDto implements Serializable {
 
+     //@com.fasterxml.jackson.annotation.JsonProperty
+
     @JsonProperty("id")
-    private Integer productID;
+    private Integer productId;
 
     @JsonProperty("name")
-    private  String  productNane;
+    private  String  productName;
 
     @JsonProperty("price")
     private BigDecimal productPrice;

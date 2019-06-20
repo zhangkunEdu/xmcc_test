@@ -31,7 +31,7 @@ public class ProductCategory {
 
 
     /**商品分类 类型**/
-    private String categoryType;
+    private Integer categoryType;
 
     /**创建时间**/
     private Date createTime;
