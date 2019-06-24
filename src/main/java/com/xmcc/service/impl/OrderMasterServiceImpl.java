@@ -1,24 +1,32 @@
 package com.xmcc.service.impl;
 
 import com.google.common.collect.Lists;
+import com.xmcc.beans.DetailShowBean;
+import com.xmcc.beans.PageBean;
 import com.xmcc.common.*;
 import com.xmcc.dto.OrderDetailDto;
 import com.xmcc.dto.OrderMasterDto;
+import com.xmcc.dto.OrderMasterPageDto;
 import com.xmcc.entity.OrderDetail;
 import com.xmcc.entity.OrderMaster;
 import com.xmcc.entity.ProductInfo;
 import com.xmcc.exception.CustomException;
+import com.xmcc.repository.OrderDetailRepository;
 import com.xmcc.repository.OrderMasterRepository;
 import com.xmcc.service.OrderDetailService;
 import com.xmcc.service.OrderMasterService;
 import com.xmcc.service.ProductInfoService;
 import com.xmcc.utils.BigDecimalUtil;
 import com.xmcc.utils.IDUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +42,9 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Resource
     private OrderMasterRepository masterRepository;
+
+    @Resource
+    private OrderDetailRepository detailRepository;
 
     /**
      * 插入订单
@@ -120,5 +131,84 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         map.put("orderId",orderMasterId);
 
         return ResultResponse.success(map);
+    }
+
+    /**
+     * 分页显示订单
+     * @param pageBean
+     * @return
+     */
+    @Override
+    public ResultResponse findOrderMasterList(PageBean pageBean) {
+        String openid = pageBean.getOpenid();
+        int page = pageBean.getPage();
+        int size = pageBean.getSize();
+
+        Pageable pageable = new PageRequest(page,size);
+        List<OrderMaster> orderMasterList=masterRepository.findAllByPageBean(openid,pageable);
+
+
+        List<OrderMasterPageDto> collect = orderMasterList.stream().
+                map(orderMaster -> OrderMasterPageDto.transfer(orderMaster)).
+                map(orderMasterPageDto -> {
+                    orderMasterPageDto.setOrderDetailList(new ArrayList<>());
+                    return orderMasterPageDto;
+           }).collect(Collectors.toList());
+
+        return ResultResponse.success(collect);
+    }
+
+    /**
+     * 显示订单详情
+     * @param detailShowBean
+     * @return
+     */
+    @Override
+    public ResultResponse findOrderDetailList(DetailShowBean detailShowBean) {
+         String openid = detailShowBean.getOpenid();
+         String orderId = detailShowBean.getOrderId();
+        //根据openid和orderId获取订单
+        List<OrderMaster> orderMasterList=masterRepository.findByOpenid(openid,orderId);
+        //转为dto  ,过滤掉订单已取消的
+        List<OrderMasterPageDto> orderMasterPageDtos = orderMasterList.stream().
+                map(orderMaster -> OrderMasterPageDto.transfer(orderMaster)).
+                filter(orderMasterPageDto -> orderMasterPageDto.getOrderStatus()!=OrderEnums.CANCEL.getCode()).
+                collect(Collectors.toList());
+        //判断是否为空
+        if (CollectionUtils.isEmpty(orderMasterPageDtos)){
+            return ResultResponse.fail("商品订单为空，或者订单已取消");
+        }
+
+
+
+        //根据订单编号获取 订单项
+        List<OrderDetail> orderDetailList = detailRepository.findByOrderId(orderId);
+
+        /**
+         * 1、将OrderDetail设置到 orderMasterList中
+         */
+        List<OrderMasterPageDto> collect = orderMasterPageDtos.parallelStream().map(orderMasterPageDto -> {
+            orderMasterPageDto.setOrderDetailList(orderDetailList);
+            return orderMasterPageDto;
+        }).collect(Collectors.toList());
+
+
+        return ResultResponse.success(collect);
+    }
+
+    /**
+     * 取消订单
+     * @param detailShowBean
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResultResponse cancelOrder(DetailShowBean detailShowBean) {
+         String openid = detailShowBean.getOpenid();
+         String orderId = detailShowBean.getOrderId();
+
+         masterRepository.updateOrderStatus(openid,orderId);
+
+        return ResultResponse.success();
     }
 }

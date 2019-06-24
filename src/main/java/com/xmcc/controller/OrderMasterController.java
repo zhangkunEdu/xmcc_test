@@ -1,6 +1,8 @@
 package com.xmcc.controller;
 
 import com.google.common.collect.Maps;
+import com.xmcc.beans.DetailShowBean;
+import com.xmcc.beans.PageBean;
 import com.xmcc.common.ResultResponse;
 import com.xmcc.dto.OrderMasterDto;
 import com.xmcc.service.OrderMasterService;
@@ -45,4 +47,82 @@ public class OrderMasterController {
 
         return masterService.insertOrder(orderMasterDto);
     }
+
+
+    /**
+     * 获取订单列表
+     * @param pageBean
+     * @param bindingResult
+     * @return
+     */
+    @RequestMapping("/list")
+    @ApiOperation(value = "分页显示商品订单列表",httpMethod = "GET",response = ResultResponse.class)
+    public ResultResponse list(@Valid @ApiParam(name = "订单对象",value = "传入json格式",required =true)PageBean pageBean, BindingResult bindingResult) {
+        //创建Map
+        HashMap<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> errorMsgList = bindingResult.getFieldErrors().
+                    stream().map(error -> error.getDefaultMessage()).collect(Collectors.toList());
+            //json转换
+            map.put("参数校验错误", JsonUtil.object2string(errorMsgList));
+            //将参数校验的错误信息返回给前端
+            return ResultResponse.fail(map);
+        }
+        return masterService.findOrderMasterList(pageBean);
+    }
+
+
+    /**
+     * 获取订单（订单项）详情
+     * @param detailShowBean
+     * @param bindingResult
+     * @return
+     */
+    @RequestMapping("/detail")
+    @ApiOperation(value = "查看订单详情",httpMethod = "GET",response = ResultResponse.class)
+    public ResultResponse detailList(@Valid @ApiParam(name = "订单对象",value = "传入json格式",required =true)DetailShowBean detailShowBean, BindingResult bindingResult) {
+        //创建Map
+        HashMap<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> errorMsgList = bindingResult.getFieldErrors().
+                    stream().map(error -> error.getDefaultMessage()).collect(Collectors.toList());
+            //json转换
+            map.put("参数校验错误", JsonUtil.object2string(errorMsgList));
+            //将参数校验的错误信息返回给前端
+            return ResultResponse.fail(map);
+        }
+
+        return masterService.findOrderDetailList(detailShowBean);
+    }
+
+
+    /**
+     * 取消订单
+     * @param detailShowBean
+     * @param bindingResult
+     * @return
+     */
+    @RequestMapping("/cancel")
+    @ApiOperation(value = "取消订单",httpMethod = "GET",response = ResultResponse.class)
+    public ResultResponse cancel(@Valid @ApiParam(name = "订单对象",value = "传入json格式",required =true)DetailShowBean detailShowBean, BindingResult bindingResult) {
+        //创建Map
+        HashMap<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> errorMsgList = bindingResult.getFieldErrors().
+                    stream().map(error -> error.getDefaultMessage()).collect(Collectors.toList());
+            //json转换
+            map.put("参数校验错误", JsonUtil.object2string(errorMsgList));
+            //将参数校验的错误信息返回给前端
+            return ResultResponse.fail(map);
+        }
+
+        return masterService.cancelOrder(detailShowBean);
+    }
+
+
+
+
+
+
+
 }

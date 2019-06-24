@@ -1,6 +1,6 @@
 package com.xmcc;
 
-import com.xmcc.entity.Student;
+import com.xmcc.repository.OrderMasterRepository;
 import com.xmcc.repository.StudentRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +15,9 @@ public class WechatPayApplicationTests {
 
     @Resource
     private StudentRepository studentRepository;
+
+    @Resource
+    private OrderMasterRepository orderMasterRepository;
 
     @Test
     public void contextLoads() {
@@ -31,13 +34,18 @@ public class WechatPayApplicationTests {
 
         //测试自定义方法一
         //基于sql查询
-        Student student = studentRepository.queryStudentsByStudentId(92);
-        System.out.println(student.toString());
+       /* Student student = studentRepository.queryStudentsByStudentId(92);
+        System.out.println(student.toString());*/
 
         //测试自定义方法二
         //基于实体类查询
-        Student student1 = studentRepository.getStudentsByStudentId(93);
-        System.out.println(student1);
+       /* Student student1 = studentRepository.getStudentsByStudentId(93);
+        System.out.println(student1);*/
+
+        //List<OrderMaster> all = orderMasterRepository.findAll();
+
+     /*   List<OrderMaster> byOpenid = orderMasterRepository.findByOpenid("oXDaO1RMGiRJACn5Bsp0nkHEqQ_w");
+        byOpenid.stream().forEach(System.out::println);*/
 
 
     }
