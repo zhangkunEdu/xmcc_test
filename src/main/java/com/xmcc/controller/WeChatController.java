@@ -63,7 +63,7 @@ public class WeChatController {
             //获得用户信息  ,授权其实用不到的 这儿打出来看看
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             log.info("获得用户信息:{}",wxMpUser.getNickname());
-            //log.info("获得用户的openid为:{}",wxMpUser.getOpenId());
+            log.info("获得用户的openid为:{}",wxMpUser.getOpenId());
         } catch (WxErrorException e) {
             e.printStackTrace();
         }

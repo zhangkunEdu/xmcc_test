@@ -18,6 +18,10 @@ public class testController {
    public String hello(){
       //logger.info("hello logback info");
       log.info("info->{}","hello log slf4j!");
+
+
+
      return "何永欢";
+
    }
 }
