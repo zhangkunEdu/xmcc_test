@@ -37,16 +37,17 @@
             <artifactId>lombok</artifactId>
             <version>1.18.6</version>
         </dependency>
-
+         <!--data-jpa 框架持久层-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
+       <!--mysql-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <!--阿里巴巴连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -89,8 +90,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
-
-
+        <!--微信授权-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>

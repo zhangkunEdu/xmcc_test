@@ -22,6 +22,10 @@ spring:
 jpa:
    show-sql: true  #显示sql语句
 
+wechat:
+   appid: wxcec0b9e65c084712
+   secret: 05a7e861c1985ced86af77fb8f7163bc
+
 
 
 
