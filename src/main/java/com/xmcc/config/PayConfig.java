@@ -14,7 +14,7 @@ public class PayConfig {
 
     //注入微信配置
     @Resource
-    private WeiXinProperties weiXinProperties;
+    private WeixinProperties weiXinProperties;
 
     //调用下单业务的Api类（best-pay-sdk第三方jar包）
     @Bean

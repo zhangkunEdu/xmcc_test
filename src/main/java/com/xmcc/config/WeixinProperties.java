@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "wechat")
 @Data
-public class WeiXinProperties {
+public class WeixinProperties {
     //公众号id
     private String appid;
     //公众号密码

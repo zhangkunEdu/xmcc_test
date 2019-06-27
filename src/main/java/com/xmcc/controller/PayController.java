@@ -5,6 +5,7 @@ import com.xmcc.entity.OrderMaster;
 import com.xmcc.service.PayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +27,12 @@ public class PayController {
         OrderMaster orderMaster = payService.findOrderMasterByOrderId(orderId);
 
         //根据订单创建支付
-        //PayResponse response =
         PayResponse response = payService.create(orderMaster);
+
+        log.info("回调的response,{}",response);
+        log.info("回调的returnUrl,{}",returnUrl);
+
+
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("payResponse",response);
@@ -35,12 +40,19 @@ public class PayController {
 
         return new ModelAndView("weixin/pay",map);
 
+
     }
 
+    //支付成功后的回调接口
     @RequestMapping("/notify")
-    public void weixin_notify(){
+    public ModelAndView weixin_notify(@RequestBody String notifyData){
+
+        log.info("提示:  {用户支付成功,进入回调验证方法}");
+        log.info("需要的验证数据为：{}",notifyData);
         //验证数据，修改订单
-        //payService.weixin_notify();
+        payService.weixin_notify(notifyData);
+        //返回到页面，页面的内容会被微信读取，告诉微信我们已完成，不会一直发送异步回调
+         return new ModelAndView("weixin/success");
 
     }
 

@@ -25,11 +25,11 @@ jpa:
 wechat:
    appid: wxcec0b9e65c084712
    secret: 05a7e861c1985ced86af77fb8f7163bc
-   mchId: 1529533061
-   mchKey: qwertyuiopasdfghjklzxcvbnm123456
+   mchId: 1529533061  #商户号
+   mchKey: qwertyuiopasdfghjklzxcvbnm123456 #商户秘钥
    openid: oXDaO1RMGiRJACn5Bsp0nkHEqQ_w
-   keyPath: G:\Xmcc\Frame\wechat_pay\src\main\resources\static\apiclient_cert.p12
-   notifyUrl: http://xmcc-zhangkun.natapp1.cc/sell/pay/test
+   keyPath: G:\Xmcc\Frame\wechat_pay\src\main\resources\static\apiclient_cert.p12 #证书路径 （退款秘钥  需要去微信支付平台下载，指定秘钥的绝对地址）
+   notifyUrl: http://xmcc-zhangkun.natapp1.cc/sell/pay/notify #支付成功后的回调地址
 
 
 

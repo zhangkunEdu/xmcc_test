@@ -91,7 +91,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      * 6.批量插入订单项
      *
      * 注意:1.生成订单就会减少库存 加入购物车不会  所有的网站基本都是这么设计的
-     *      2.商品价格以生成订单时候为准，后面商品价格改变不影响已经生成的订单
+     *      2.商品价格以生成订单时候为准，后面商品价格改变不影响 已经生成的订单
      */
     /**
      * 根据商品id 获取商品信息
@@ -131,6 +131,19 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     public void updateProduct(ProductInfo productInfo) {
         //修改的信息，直接保存
         infoRepository.save(productInfo);
+    }
+
+
+    /**
+     * 订单取消后  批量修改商品数量
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    @Override
+    public Integer batchInsert(String productId, Integer quantity) {
+         Integer data =  infoRepository.batchUpdate(productId,quantity);
+        return data;
     }
 
 

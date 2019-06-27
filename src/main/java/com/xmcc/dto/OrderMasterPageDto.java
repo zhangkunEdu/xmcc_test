@@ -24,7 +24,6 @@ public class OrderMasterPageDto extends OrderMaster implements Serializable {
      public List<OrderDetail> orderDetailList;
 
      public static OrderMasterPageDto transfer(OrderMaster orderMaster){
-
         OrderMasterPageDto dto = new OrderMasterPageDto();
         BeanUtils.copyProperties(orderMaster,dto);
         return dto;

@@ -23,6 +23,6 @@ public interface OrderMasterRepository extends JpaRepository<OrderMaster, String
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(nativeQuery = true,value = "UPDATE order_master SET order_status=2 WHERE buyer_openid = ?1 and order_id=?2 ")
-    void updateOrderStatus(String openid, String orderId);
+    @Query(nativeQuery = true,value = "UPDATE order_master SET order_status=?3 WHERE buyer_openid = ?1 and order_id=?2 ")
+    void updateOrderStatus(String openid, String orderId,int cancel_code);
 }

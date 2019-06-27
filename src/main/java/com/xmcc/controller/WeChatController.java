@@ -26,7 +26,7 @@ public class WeChatController {
     private WxMpService wxMpService;
 
     //根据API接口文档 书写路径
-    @RequestMapping("authorize")
+    @RequestMapping("/authorize")
     //查看文档需要一个returnUrl参数
     public String authorize(@RequestParam("returnUrl") String returnUrl) throws UnsupportedEncodingException {
         //自己编写获得openid的路径 在下面定义方法getUserInfo
@@ -37,12 +37,14 @@ public class WeChatController {
          * 第二个是策略：获得简单的授权，还是希望获得用户的信息
          * 第三个参数是我们希望携带的参数:查看API文档需要返回returnUrl 所以我们就携带它
          */
-        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl,"UTF-8"));
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO,
+                URLEncoder.encode(returnUrl,"UTF-8"));
+        log.info("*******redirect为：{}",redirectUrl);
         return "redirect:"+redirectUrl;
 
     }
 
-    @RequestMapping("getUserInfo")
+    @RequestMapping("/getUserInfo")
     /**
      * code:是授权码
      * returnUrl：是刚才我们自己传递的参数  会传递到微信然后传回来
@@ -71,7 +73,7 @@ public class WeChatController {
         String openId = wxMpOAuth2AccessToken.getOpenId();
 
         //String url = URLDecoder.decode(returnUrl,"UTF-8")+"?openid="+openId;
-
+        log.info("########回调地址为：{}",URLDecoder.decode(returnUrl,"UTF-8")+"?openid="+openId);
         return "redirect:"+ URLDecoder.decode(returnUrl,"UTF-8")+"?openid="+openId;
     }
 

@@ -11,4 +11,7 @@ public interface ProductInfoService {
     ResultResponse<ProductInfo> QueryProductListById(String productId);
     //修改商品
     void updateProduct(ProductInfo productInfo);
+
+    //订单取消后  批量修改商品数量
+    Integer batchInsert(String productId, Integer quantity);
 }

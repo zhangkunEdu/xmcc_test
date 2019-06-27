@@ -1,6 +1,7 @@
 package com.xmcc.service.impl;
 
 import com.google.common.collect.Lists;
+import com.lly835.bestpay.model.RefundResponse;
 import com.xmcc.beans.DetailShowBean;
 import com.xmcc.beans.PageBean;
 import com.xmcc.common.*;
@@ -15,9 +16,11 @@ import com.xmcc.repository.OrderDetailRepository;
 import com.xmcc.repository.OrderMasterRepository;
 import com.xmcc.service.OrderDetailService;
 import com.xmcc.service.OrderMasterService;
+import com.xmcc.service.PayService;
 import com.xmcc.service.ProductInfoService;
 import com.xmcc.utils.BigDecimalUtil;
 import com.xmcc.utils.IDUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,8 +32,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
+@Slf4j
 public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Resource
@@ -45,6 +50,12 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Resource
     private OrderDetailRepository detailRepository;
+
+    @Resource
+    private ProductInfoService productInfoService;
+
+    @Resource
+    private PayService payService;
 
     /**
      * 插入订单
@@ -206,8 +217,54 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     public ResultResponse cancelOrder(DetailShowBean detailShowBean) {
          String openid = detailShowBean.getOpenid();
          String orderId = detailShowBean.getOrderId();
+         //根据 orderId 获取订单
+        Optional<OrderMaster> optional = masterRepository.findById(orderId);
+        //1、判断是否存在
+        if (!optional.isPresent()){
+            return ResultResponse.fail(OrderEnums.ORDER_NOT_EXITS.getMsg());
+        }
+        OrderMaster orderMaster = optional.get();
+        //2、判断订单是否已完成、或者是否取消
+        if (orderMaster.getOrderStatus()==OrderEnums.FINSH.getCode()||orderMaster.getOrderStatus()==OrderEnums.CANCEL.getCode()){
+            return ResultResponse.fail(OrderEnums.FINSH_CANCEL.getMsg());
+        }
+        //3、修改订单状态
+         masterRepository.updateOrderStatus(openid,orderId,OrderEnums.CANCEL.getCode());
+        //4、查询订单关联的订单项
+        List<OrderDetail> orderDetailList = detailRepository.findByOrderId(orderId);
+        if (!CollectionUtils.isEmpty(orderDetailList)){
+             //如果此订单有订单项，进行批量修改
 
-         masterRepository.updateOrderStatus(openid,orderId);
+            //5、遍历订单项、实现批量修改
+            for (OrderDetail orderDetail: orderDetailList){
+
+                Integer data =  productInfoService.batchInsert(orderDetail.getProductId(), orderDetail.getProductQuantity());
+
+                if (data<1){
+                    log.error("，商品库存增加失败商品id为:{}，商品名称为:{}",orderDetail.getProductId(),orderDetail.getProductName());
+                    //抛出异常，实现事务回滚
+                    throw new CustomException("商品库存增加失败");
+                }
+
+            }
+        }
+
+        //6、当用户取消订单后，判断用户已完成付款时，进行退款
+        //TODO:微信退款
+        if (orderMaster.getPayStatus()==OrderEnums.FINSH.getCode()){
+            RefundResponse refund = payService.refund(orderMaster);
+            String refundId = refund.getRefundId();
+            if (refundId.length()==0){
+               log.error("***************退款失败！");
+            }
+            //修改支付状态
+            orderMaster.setPayStatus(PayEnums.REFUND.getCode());
+            masterRepository.save(orderMaster);
+
+        }
+
+
+
 
         return ResultResponse.success();
     }

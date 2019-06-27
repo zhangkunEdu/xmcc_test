@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 public class WechatConfig {
 
     @Resource
-    private WeiXinProperties weiXinProperties;
+    private WeixinProperties weiXinProperties;
 
     @Bean//文档中需要用到这个对象
     public WxMpService wxMpService(){
